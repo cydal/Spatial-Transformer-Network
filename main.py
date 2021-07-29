@@ -3,6 +3,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import torch.optim as optim
 import numpy as np
+import torch.nn.functional as F
 
 from utils import *
 from models.model import *
@@ -33,16 +34,15 @@ if __name__ == "__main__":
     print(summary(model, input_size=(3, 32, 32)))
 
     optimizer = optim.SGD(model.parameters(), lr=0.01)
-    criterion = F.nll_loss()
 
 
-    for epoch in range(1, 1 + 1):
-        train(epoch)
-        train(model, train_loader, epoch, optimizer, device, criterion)
-        test()
+    for epoch in range(1, 50 + 1):
+        train(model, train_loader, epoch, optimizer, device)
+        test(model, test_loader, device)
 
     # Visualize the STN transformation on some input batch
-    visualize_stn()
+    visualize_stn(model, test_loader, device)
+    
 
     plt.ioff()
     plt.show()

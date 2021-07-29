@@ -3,7 +3,8 @@ import albumentations as A
 from albumentations.pytorch import ToTensorV2
 import matplotlib.pyplot as plt
 import numpy as np
-
+import torchvision
+import torch
 
 
 
@@ -79,14 +80,14 @@ def get_test_loader(transform=None):
 
 
 
-def train(model, train_loader, epoch, optimizer, device, criterion):
+def train(model, train_loader, epoch, optimizer, device):
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
         data, target = data.to(device), target.to(device)
 
         optimizer.zero_grad()
         output = model(data)
-        loss = criterion(output, target)
+        loss = F.nll_loss(output, target)
         loss.backward()
         optimizer.step()
         if batch_idx % 500 == 0:
@@ -98,7 +99,7 @@ def train(model, train_loader, epoch, optimizer, device, criterion):
 #
 
 
-def test(model, test_loader, device, criterion):
+def test(model, test_loader, device):
     with torch.no_grad():
         model.eval()
         test_loss = 0
@@ -108,7 +109,7 @@ def test(model, test_loader, device, criterion):
             output = model(data)
 
             # sum up batch loss
-            test_loss += criterion(output, target, size_average=False).item()
+            test_loss += F.nll_loss(output, target, size_average=False).item()
             # get the index of the max log-probability
             pred = output.max(1, keepdim=True)[1]
             correct += pred.eq(target.view_as(pred)).sum().item()
@@ -134,7 +135,7 @@ def convert_image_np(inp):
 # the corresponding transformed batch using STN.
 
 
-def visualize_stn():
+def visualize_stn(model, test_loader, device):
     with torch.no_grad():
         # Get a batch of training data
         data = next(iter(test_loader))[0].to(device)
