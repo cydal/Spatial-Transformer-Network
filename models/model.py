@@ -9,7 +9,6 @@ import torch.optim as optim
 import torchvision
 from torchvision import datasets, transforms
 import matplotlib.pyplot as plt
-import numpy as np
 
 
 
@@ -67,6 +66,3 @@ class Net(nn.Module):
         x = F.dropout(x, training=self.training)
         x = self.fc2(x)
         return F.log_softmax(x, dim=1)
-
-
-model = Net().to(device)

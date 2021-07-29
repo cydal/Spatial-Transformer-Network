@@ -86,7 +86,7 @@ def train(model, train_loader, epoch, optimizer, device, criterion):
 
         optimizer.zero_grad()
         output = model(data)
-        loss = F.nll_loss(output, target)
+        loss = criterion(output, target)
         loss.backward()
         optimizer.step()
         if batch_idx % 500 == 0:
@@ -108,7 +108,7 @@ def test(model, test_loader, device, criterion):
             output = model(data)
 
             # sum up batch loss
-            test_loss += F.nll_loss(output, target, size_average=False).item()
+            test_loss += criterion(output, target, size_average=False).item()
             # get the index of the max log-probability
             pred = output.max(1, keepdim=True)[1]
             correct += pred.eq(target.view_as(pred)).sum().item()
