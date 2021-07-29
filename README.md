@@ -68,6 +68,11 @@ x = F.grid_sample(x, grid)
 ```
 
 
+#### How to run
+
+> run main.py 
+
+
 
 
 ### Reference
