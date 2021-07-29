@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torchvision
 import torch
-
+import torch.nn.functional as F
 
 
 class Cifar10SearchDataset(torchvision.datasets.CIFAR10):
